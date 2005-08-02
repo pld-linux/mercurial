@@ -1,4 +1,5 @@
 Summary:	Mercurial Distributed SCM
+Summary(pl):	Mercurial - rozproszony SCM
 Name:		mercurial
 Version:	0.6b
 Release:	1
@@ -25,6 +26,23 @@ Features include:
 - Integrated stand-alone web interface
 - Small Python codebase
 - GPL license
+
+%description -l pl
+Mercurial to szybki, lekki system zarz±dzania kodem ¼ród³owym
+zaprojektowany do wydajnej obs³ugi bardzo du¿ych rozproszonych
+projektów. Mo¿liwo¶ci obejmuj±:
+- przechowywanie skompresowanych plików ró¿nic i schemat odtwarzania
+  O(1)
+- pe³ne indeksowanie plików i zmian w celu szybkiego przegl±dania
+  historii projektu
+- silne, oparte na SHA1 sprawdzanie integralno¶ci oraz model
+  przechowywania z samym do³±czaniem
+- zdecentralizowany model rozwoju z dowolnym ³±czeniem miêdzy drzewami
+- szybki protokó³ ³±czenia po sieci oparty na HTTP
+- ³atwy w u¿yciu interfejs linii poleceñ
+- zintegrowany samodzielny interfejs WWW
+- ma³y kod podstawowy w Pythonie
+- licencja GPL
 
 %prep
 %setup -q
