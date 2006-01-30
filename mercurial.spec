@@ -44,6 +44,16 @@ projektów. Mo¿liwo¶ci obejmuj±:
 - ma³y kod podstawowy w Pythonie
 - licencja GPL
 
+%package hgk
+Summary:	GUI for mercurial
+Group:		Development/Version Control
+Requires:	%{name} >= %{version}-%{release}
+%pyrequires_eq  python-modules
+
+%description hgk
+A tool called that allows browsing the history of a repository in a
+GUI
+
 %prep
 %setup -q
 
@@ -57,14 +67,25 @@ python setup.py install \
         --optimize=2 \
         --root=$RPM_BUILD_ROOT
 
+install contrib/hgk $RPM_BUILD_ROOT%{_bindir}
+install contrib/hgk.py $RPM_BUILD_ROOT%{py_sitedir}/mercurial
+%py_ocomp $RPM_BUILD_ROOT%{py_sitedir}/mercurial
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
 %doc CONTRIBUTORS README comparison.txt notes.txt
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/hg
+%attr(755,root,root) %{_bindir}/hgmerge
 %dir %{py_sitedir}/%{name}
 %attr(755,root,root) %{py_sitedir}/%{name}/*.so
 %{py_sitedir}/%{name}/*.py[co]
+%exclude %{py_sitedir}/%{name}/hgk.py*
 %{py_sitedir}/%{name}/templates
+
+%files hgk
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/hgk
+%{py_sitedir}/%{name}/hgk.py[co]
