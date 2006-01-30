@@ -52,7 +52,11 @@ Requires:	%{name} >= %{version}-%{release}
 
 %description hgk
 A tool called that allows browsing the history of a repository in a
-GUI
+GUI.
+
+To enable it add to .hgrc file:
+[extensions]
+hgk=
 
 %prep
 %setup -q
@@ -68,8 +72,9 @@ python setup.py install \
         --root=$RPM_BUILD_ROOT
 
 install contrib/hgk $RPM_BUILD_ROOT%{_bindir}
-install contrib/hgk.py $RPM_BUILD_ROOT%{py_sitedir}/mercurial
-%py_ocomp $RPM_BUILD_ROOT%{py_sitedir}/mercurial
+install contrib/hgk.py $RPM_BUILD_ROOT%{py_sitedir}
+%py_comp $RPM_BUILD_ROOT%{py_sitedir}
+%py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -82,10 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_sitedir}/%{name}
 %attr(755,root,root) %{py_sitedir}/%{name}/*.so
 %{py_sitedir}/%{name}/*.py[co]
-%exclude %{py_sitedir}/%{name}/hgk.py*
 %{py_sitedir}/%{name}/templates
 
 %files hgk
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/hgk
-%{py_sitedir}/%{name}/hgk.py[co]
+%{py_sitedir}/hgk.py[co]
