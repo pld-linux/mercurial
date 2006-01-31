@@ -46,8 +46,9 @@ projektów. Mo¿liwo¶ci obejmuj±:
 
 %package hgk
 Summary:	GUI for mercurial
+Summary(pl):	Graficzny interfejs u¿ytkownika dla systemu Mercurial
 Group:		Development/Version Control
-Requires:	%{name} >= %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 %pyrequires_eq  python-modules
 
 %description hgk
@@ -55,6 +56,14 @@ A tool called that allows browsing the history of a repository in a
 GUI.
 
 To enable it add to .hgrc file:
+[extensions]
+hgk=
+
+%description hgk -l pl
+Narzêdzie pozwalaj±ce na przegl±danie historii repozytorium w
+graficznym interfejsie u¿ytkownika.
+
+Aby je uaktywniæ, nale¿y dodaæ do pliku .hgrc:
 [extensions]
 hgk=
 
