@@ -1,12 +1,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	0.8.1
+Version:	0.9.1
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	ffa37810cf9c48608f5172a622bef2f5
+# Source0-md5:	9ed3962bba640a686c37faa47739270c
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	python >= 2.2.1
 %pyrequires_eq  python-modules
@@ -81,7 +81,6 @@ python setup.py install \
         --root=$RPM_BUILD_ROOT
 
 install contrib/hgk $RPM_BUILD_ROOT%{_bindir}
-install contrib/hgk.py $RPM_BUILD_ROOT%{py_sitedir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 
@@ -101,4 +100,3 @@ rm -rf $RPM_BUILD_ROOT
 %files hgk
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/hgk
-%{py_sitedir}/hgk.py[co]
