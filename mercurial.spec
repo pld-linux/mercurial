@@ -8,6 +8,7 @@ Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
 # Source0-md5:	9ed3962bba640a686c37faa47739270c
 URL:		http://www.selenic.com/mercurial/
+BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	python >= 2.2.1
 %pyrequires_eq  python-modules
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -83,6 +84,7 @@ python setup.py install \
 install contrib/hgk $RPM_BUILD_ROOT%{_bindir}
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
+%py_postclean
 
 %clean
 rm -rf $RPM_BUILD_ROOT
