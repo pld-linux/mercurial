@@ -78,10 +78,16 @@ python setup.py build
 rm -rf $RPM_BUILD_ROOT
 
 python setup.py install \
-        --optimize=2 \
-        --root=$RPM_BUILD_ROOT
+	--optimize=2 \
+	--root=$RPM_BUILD_ROOT
 
 install contrib/hgk $RPM_BUILD_ROOT%{_bindir}
+
+install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5}
+install doc/hg.1 $RPM_BUILD_ROOT%{_mandir}/man1/hg.1
+install doc/hgmerge.1 $RPM_BUILD_ROOT%{_mandir}/man1/hgmerge.1
+install doc/hgrc.5 $RPM_BUILD_ROOT%{_mandir}/man5/hgrc.5
+
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_postclean
@@ -98,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{py_sitedir}/%{name}/*.so
 %{py_sitedir}/%{name}/*.py[co]
 %{py_sitedir}/%{name}/templates
+%{_mandir}/man1/hg.1*
+%{_mandir}/man1/hgmerge.1*
+%{_mandir}/man5/hgrc.5*
 
 %files hgk
 %defattr(644,root,root,755)
