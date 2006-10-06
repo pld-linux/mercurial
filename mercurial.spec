@@ -100,9 +100,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc CONTRIBUTORS README comparison.txt notes.txt
 %attr(755,root,root) %{_bindir}/hg
 %attr(755,root,root) %{_bindir}/hgmerge
+%{py_sitedir}/hgext
 %dir %{py_sitedir}/%{name}
 %attr(755,root,root) %{py_sitedir}/%{name}/*.so
 %{py_sitedir}/%{name}/*.py[co]
+%{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/templates
 %{_mandir}/man1/hg.1*
 %{_mandir}/man1/hgmerge.1*
