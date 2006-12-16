@@ -10,7 +10,7 @@ Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
 BuildRequires:	rpmbuild(macros) >= 1.219
-BuildRequires:	python >= 2.2.1
+BuildRequires:	python >= 1:2.3
 %pyrequires_eq  python-modules
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -73,13 +73,13 @@ hgk=
 %setup -q
 
 %build
-python setup.py build
+%{__python} setup.py build
 %{__make} -C doc
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-python setup.py install \
+%{__python} setup.py install \
 	--optimize=2 \
 	--root=$RPM_BUILD_ROOT
 
