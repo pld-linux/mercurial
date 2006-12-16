@@ -1,13 +1,14 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	0.9.1
-Release:	2
+Version:	0.9.2
+Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	9ed3962bba640a686c37faa47739270c
+# Source0-md5:	31529a7d81997f2388ad20df0ba4889e
 URL:		http://www.selenic.com/mercurial/
+BuildRequires:	asciidoc
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	python >= 2.2.1
 %pyrequires_eq  python-modules
@@ -73,6 +74,7 @@ hgk=
 
 %build
 python setup.py build
+%{__make} -C doc
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -87,6 +89,7 @@ install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5}
 install doc/hg.1 $RPM_BUILD_ROOT%{_mandir}/man1/hg.1
 install doc/hgmerge.1 $RPM_BUILD_ROOT%{_mandir}/man1/hgmerge.1
 install doc/hgrc.5 $RPM_BUILD_ROOT%{_mandir}/man5/hgrc.5
+install doc/hgignore.5 $RPM_BUILD_ROOT%{_mandir}/man5/hgignore.5
 
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
@@ -97,7 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CONTRIBUTORS README comparison.txt notes.txt
+%doc CONTRIBUTORS README
 %attr(755,root,root) %{_bindir}/hg
 %attr(755,root,root) %{_bindir}/hgmerge
 %{py_sitedir}/hgext
@@ -106,9 +109,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/%{name}/*.py[co]
 %{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/templates
-%{_mandir}/man1/hg.1*
-%{_mandir}/man1/hgmerge.1*
-%{_mandir}/man5/hgrc.5*
+%{py_sitedir}/mercurial-unknown-py2.5.egg-info
+%{_mandir}/man1/hg.1.gz
+%{_mandir}/man1/hgmerge.1.gz
+%{_mandir}/man5/hgrc.5.gz
+%{_mandir}/man5/hgignore.5.gz
 
 %files hgk
 %defattr(644,root,root,755)
