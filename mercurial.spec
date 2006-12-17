@@ -12,7 +12,7 @@ BuildRequires:	asciidoc
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	python >= 1:2.3
 BuildRequires:	xmlto
-%pyrequires_eq  python-modules
+%pyrequires_eq	python-modules
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -52,7 +52,7 @@ Summary:	GUI for mercurial
 Summary(pl):	Graficzny interfejs u¿ytkownika dla systemu Mercurial
 Group:		Development/Version Control
 Requires:	%{name} = %{version}-%{release}
-%pyrequires_eq  python-modules
+%pyrequires_eq	python-modules
 
 %description hgk
 A tool called that allows browsing the history of a repository in a
