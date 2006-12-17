@@ -11,6 +11,7 @@ URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	python >= 1:2.3
+BuildRequires:	xmlto
 %pyrequires_eq  python-modules
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -109,7 +110,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/%{name}/*.py[co]
 %{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/templates
-%{py_sitedir}/mercurial-unknown-py2.5.egg-info
 %{_mandir}/man1/hg.1.gz
 %{_mandir}/man1/hgmerge.1.gz
 %{_mandir}/man5/hgrc.5.gz
