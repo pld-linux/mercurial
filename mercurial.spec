@@ -110,10 +110,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/%{name}/*.py[co]
 %{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/templates
-%{_mandir}/man1/hg.1.gz
-%{_mandir}/man1/hgmerge.1.gz
-%{_mandir}/man5/hgrc.5.gz
-%{_mandir}/man5/hgignore.5.gz
+%{_mandir}/man1/hg.1*
+%{_mandir}/man1/hgmerge.1*
+%{_mandir}/man5/hgrc.5*
+%{_mandir}/man5/hgignore.5*
 
 %files hgk
 %defattr(644,root,root,755)
