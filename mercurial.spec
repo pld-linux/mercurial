@@ -1,5 +1,5 @@
 Summary:	Mercurial Distributed SCM
-Summary(pl):	Mercurial - rozproszony SCM
+Summary(pl.UTF-8):   Mercurial - rozproszony SCM
 Name:		mercurial
 Version:	0.9.2
 Release:	1
@@ -30,26 +30,26 @@ Features include:
 - Small Python codebase
 - GPL license
 
-%description -l pl
-Mercurial to szybki, lekki system zarz±dzania kodem ¼ród³owym
-zaprojektowany do wydajnej obs³ugi bardzo du¿ych rozproszonych
-projektów. Mo¿liwo¶ci obejmuj±:
-- przechowywanie skompresowanych plików ró¿nic i schemat odtwarzania
+%description -l pl.UTF-8
+Mercurial to szybki, lekki system zarzÄ…dzania kodem ÅºrÃ³dÅ‚owym
+zaprojektowany do wydajnej obsÅ‚ugi bardzo duÅ¼ych rozproszonych
+projektÃ³w. MoÅ¼liwoÅ›ci obejmujÄ…:
+- przechowywanie skompresowanych plikÃ³w rÃ³Å¼nic i schemat odtwarzania
   O(1)
-- pe³ne indeksowanie plików i zmian w celu szybkiego przegl±dania
+- peÅ‚ne indeksowanie plikÃ³w i zmian w celu szybkiego przeglÄ…dania
   historii projektu
-- silne, oparte na SHA1 sprawdzanie integralno¶ci oraz model
-  przechowywania z samym do³±czaniem
-- zdecentralizowany model rozwoju z dowolnym ³±czeniem miêdzy drzewami
-- szybki protokó³ ³±czenia po sieci oparty na HTTP
-- ³atwy w u¿yciu interfejs linii poleceñ
+- silne, oparte na SHA1 sprawdzanie integralnoÅ›ci oraz model
+  przechowywania z samym doÅ‚Ä…czaniem
+- zdecentralizowany model rozwoju z dowolnym Å‚Ä…czeniem miÄ™dzy drzewami
+- szybki protokÃ³Å‚ Å‚Ä…czenia po sieci oparty na HTTP
+- Å‚atwy w uÅ¼yciu interfejs linii poleceÅ„
 - zintegrowany samodzielny interfejs WWW
-- ma³y kod podstawowy w Pythonie
+- maÅ‚y kod podstawowy w Pythonie
 - licencja GPL
 
 %package hgk
 Summary:	GUI for mercurial
-Summary(pl):	Graficzny interfejs u¿ytkownika dla systemu Mercurial
+Summary(pl.UTF-8):   Graficzny interfejs uÅ¼ytkownika dla systemu Mercurial
 Group:		Development/Version Control
 Requires:	%{name} = %{version}-%{release}
 %pyrequires_eq	python-modules
@@ -62,11 +62,11 @@ To enable it add to .hgrc file:
 [extensions]
 hgk=
 
-%description hgk -l pl
-Narzêdzie pozwalaj±ce na przegl±danie historii repozytorium w
-graficznym interfejsie u¿ytkownika.
+%description hgk -l pl.UTF-8
+NarzÄ™dzie pozwalajÄ…ce na przeglÄ…danie historii repozytorium w
+graficznym interfejsie uÅ¼ytkownika.
 
-Aby je uaktywniæ, nale¿y dodaæ do pliku .hgrc:
+Aby je uaktywniÄ‡, naleÅ¼y dodaÄ‡ do pliku .hgrc:
 [extensions]
 hgk=
 
