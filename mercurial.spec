@@ -1,5 +1,5 @@
 Summary:	Mercurial Distributed SCM
-Summary(pl.UTF-8):   Mercurial - rozproszony SCM
+Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
 Version:	0.9.2
 Release:	1
@@ -49,7 +49,7 @@ projektów. Możliwości obejmują:
 
 %package hgk
 Summary:	GUI for mercurial
-Summary(pl.UTF-8):   Graficzny interfejs użytkownika dla systemu Mercurial
+Summary(pl.UTF-8):	Graficzny interfejs użytkownika dla systemu Mercurial
 Group:		Development/Version Control
 Requires:	%{name} = %{version}-%{release}
 %pyrequires_eq	python-modules
