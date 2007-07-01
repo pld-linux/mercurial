@@ -1,4 +1,7 @@
-%bcond_without	tests
+#
+# Conditional build:
+%bcond_without	tests	# don't run tests
+#
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
@@ -10,8 +13,8 @@ Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
 # Source0-md5:	2e5ac6ddf434534938d4fc27dc9797c9
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
-BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	python >= 1:2.3
+BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	xmlto
 %pyrequires_eq	python-modules
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
