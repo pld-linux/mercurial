@@ -1,12 +1,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	0.9.3
+Version:	0.9.4
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	5e39fed853e5669cbac32b77a67bb6dd
+# Source0-md5:	2e5ac6ddf434534938d4fc27dc9797c9
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
 BuildRequires:	rpmbuild(macros) >= 1.219
