@@ -1,3 +1,4 @@
+%bcond_without	tests
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
@@ -76,6 +77,8 @@ hgk=
 %build
 %{__python} setup.py build
 %{__make} -C doc
+
+%{?with_tests:cd tests && %{__python} run-tests.py --verbose}
 
 %install
 rm -rf $RPM_BUILD_ROOT
