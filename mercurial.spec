@@ -13,7 +13,8 @@ Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
 # Source0-md5:	a9dd54bcb87ca332315ce83293816e37
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
-BuildRequires:	python >= 1:2.3
+BuildRequires:	python >= 1:2.5
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	xmlto
 %pyrequires_eq	python-modules
