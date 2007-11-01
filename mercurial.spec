@@ -5,12 +5,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	0.9.4
+Version:	0.9.5
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	2e5ac6ddf434534938d4fc27dc9797c9
+# Source0-md5:	a9dd54bcb87ca332315ce83293816e37
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
 BuildRequires:	python >= 1:2.3
@@ -116,6 +116,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/%{name}/*.py[co]
 %{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/templates
+%{py_sitedir}/*.egg-info
 %{_mandir}/man1/hg.1*
 %{_mandir}/man1/hgmerge.1*
 %{_mandir}/man5/hgrc.5*
