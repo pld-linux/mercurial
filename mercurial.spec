@@ -1,12 +1,12 @@
 #
 # Conditional build:
-%bcond_without tests   # don't run tests
+%bcond_with tests   # don't run tests
 #
 Summary:	Mercurial Distributed SCM
 Summary(pl):	Mercurial - rozproszony SCM
 Name:		mercurial
 Version:	0.9.5
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
@@ -118,7 +118,6 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/%{name}/*.py[co]
 %{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/templates
-%{py_sitedir}/*.egg-info
 %{_mandir}/man1/hg.1*
 %{_mandir}/man1/hgmerge.1*
 %{_mandir}/man5/hgrc.5*
