@@ -1,16 +1,23 @@
+#
+# Conditional build:
+%bcond_without tests   # don't run tests
+#
 Summary:	Mercurial Distributed SCM
 Summary(pl):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	0.9.1
-Release:	1
+Version:	0.9.5
+Release:	0.1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	9ed3962bba640a686c37faa47739270c
+# Source0-md5:	a9dd54bcb87ca332315ce83293816e37
 URL:		http://www.selenic.com/mercurial/
-BuildRequires:	rpmbuild(macros) >= 1.219
+BuildRequires:	asciidoc
 BuildRequires:	python >= 2.2.1
+BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.219
 %pyrequires_eq  python-modules
+BuildRequires:	xmlto
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -72,16 +79,27 @@ hgk=
 %setup -q
 
 %build
-python setup.py build
+%{__python} setup.py build
+%{__make} -C doc
+
+%{?with_tests:cd tests && %{__python} run-tests.py --verbose}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-python setup.py install \
+%{__python} setup.py install \
         --optimize=2 \
         --root=$RPM_BUILD_ROOT
 
 install contrib/hgk $RPM_BUILD_ROOT%{_bindir}
+
+install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5}
+install doc/hg.1 $RPM_BUILD_ROOT%{_mandir}/man1/hg.1
+install doc/hgmerge.1 $RPM_BUILD_ROOT%{_mandir}/man1/hgmerge.1
+install doc/hgrc.5 $RPM_BUILD_ROOT%{_mandir}/man5/hgrc.5
+install doc/hgignore.5 $RPM_BUILD_ROOT%{_mandir}/man5/hgignore.5
+
+
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_postclean
@@ -91,13 +109,20 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CONTRIBUTORS README comparison.txt notes.txt
+%doc CONTRIBUTORS README
 %attr(755,root,root) %{_bindir}/hg
 %attr(755,root,root) %{_bindir}/hgmerge
+%{py_sitedir}/hgext
 %dir %{py_sitedir}/%{name}
 %attr(755,root,root) %{py_sitedir}/%{name}/*.so
 %{py_sitedir}/%{name}/*.py[co]
+%{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/templates
+%{py_sitedir}/*.egg-info
+%{_mandir}/man1/hg.1*
+%{_mandir}/man1/hgmerge.1*
+%{_mandir}/man5/hgrc.5*
+%{_mandir}/man5/hgignore.5*
 
 %files hgk
 %defattr(644,root,root,755)
