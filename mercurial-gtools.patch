@@ -1,0 +1,387 @@
+# HG changeset patch
+# User Thomas Arendsen Hein <thomas@intevation.de>
+# Date 1185818476 -7200
+# Node ID ac97e065cfc7868311814588c624e21c257ddad8
+# Parent  60c54154ec4c764ec2010d5ec21e7918c8a4e4f9
+Fix re: and glob: patterns in .hgignore (reported by Brad Schick)
+
+relglob: and relre: were already detected for a long time, so
+I kept this undocumented functionality, especially as it was already
+tested in test-hgignore.
+
+diff -r 60c54154ec4c -r ac97e065cfc7 mercurial/ignore.py
+--- a/mercurial/ignore.py	Thu Jul 26 11:19:53 2007 -0500
++++ b/mercurial/ignore.py	Mon Jul 30 20:01:16 2007 +0200
+@@ -57,9 +57,12 @@ def ignore(root, files, warn):
+                         warn(_("%s: ignoring invalid syntax '%s'\n") % (f, s))
+                     continue
+                 pat = syntax + line
+-                for s in syntaxes.values():
+-                    if line.startswith(s):
++                for s, rels in syntaxes.items():
++                    if line.startswith(rels):
+                         pat = line
++                        break
++                    elif line.startswith(s+':'):
++                        pat = rels + line[len(s)+1:]
+                         break
+                 pats[f].append(pat)
+         except IOError, inst:
+diff -r 60c54154ec4c -r ac97e065cfc7 tests/test-hgignore
+--- a/tests/test-hgignore	Thu Jul 26 11:19:53 2007 -0500
++++ b/tests/test-hgignore	Mon Jul 30 20:01:16 2007 +0200
+@@ -40,12 +40,15 @@ echo ".*\.o" > .hgignore
+ echo ".*\.o" > .hgignore
+ echo "--" ; hg status
+ 
+-# XXX: broken
+-#echo "glob:**.o" > .hgignore
+-#echo "--" ; hg status
+-#
+-#echo "glob:*.o" > .hgignore
+-#echo "--" ; hg status
++echo "glob:**.o" > .hgignore
++echo "--" ; hg status
++
++echo "glob:*.o" > .hgignore
++echo "--" ; hg status
++
++echo "syntax: glob" > .hgignore
++echo "re:.*\.o" >> .hgignore
++echo "--" ; hg status
+ 
+ echo "syntax: invalid" > .hgignore
+ echo "--" ; hg status 2>&1 | sed -e 's/.*\.hgignore:/.hgignore:/'
+diff -r 60c54154ec4c -r ac97e065cfc7 tests/test-hgignore.out
+--- a/tests/test-hgignore.out	Thu Jul 26 11:19:53 2007 -0500
++++ b/tests/test-hgignore.out	Mon Jul 30 20:01:16 2007 +0200
+@@ -8,6 +8,21 @@ A dir/b.o
+ ? syntax
+ --
+ abort: .hgignore: invalid pattern (relre): *.o
++--
++A dir/b.o
++? .hgignore
++? a.c
++? syntax
++--
++A dir/b.o
++? .hgignore
++? a.c
++? syntax
++--
++A dir/b.o
++? .hgignore
++? a.c
++? syntax
+ --
+ A dir/b.o
+ ? .hgignore
+# HG changeset patch
+# User Brad Schick <schickb@gmail.com>
+# Date 1186435943 25200
+# Node ID 1830bc7676ee213df25f972d1c24c3d62e7f2f78
+# Parent  c14968344d19dd9fbe8c2e39be1cdda7e5468a2c
+extdiff: un-nested two functions
+
+The functions in extdiff that create temporary repo copies for are useful in other extensions, so the change moves them at the module level.
+
+diff -r c14968344d19 -r 1830bc7676ee hgext/extdiff.py
+--- a/hgext/extdiff.py	Mon Aug 06 15:37:14 2007 -0700
++++ b/hgext/extdiff.py	Mon Aug 06 14:32:23 2007 -0700
+@@ -53,57 +53,60 @@ from mercurial import cmdutil, util
+ from mercurial import cmdutil, util
+ import os, shutil, tempfile
+ 
++
++def snapshot_node(ui, repo, files, node, tmproot):
++    '''snapshot files as of some revision'''
++    mf = repo.changectx(node).manifest()
++    dirname = os.path.basename(repo.root)
++    if dirname == "":
++        dirname = "root"
++    dirname = '%s.%s' % (dirname, short(node))
++    base = os.path.join(tmproot, dirname)
++    os.mkdir(base)
++    if not ui.quiet:
++        ui.write_err(_('making snapshot of %d files from rev %s\n') %
++                     (len(files), short(node)))
++    for fn in files:
++        if not fn in mf:
++            # skipping new file after a merge ?
++            continue
++        wfn = util.pconvert(fn)
++        ui.note('  %s\n' % wfn)
++        dest = os.path.join(base, wfn)
++        destdir = os.path.dirname(dest)
++        if not os.path.isdir(destdir):
++            os.makedirs(destdir)
++        data = repo.wwritedata(wfn, repo.file(wfn).read(mf[wfn]))
++        open(dest, 'wb').write(data)
++    return dirname
++
++
++def snapshot_wdir(ui, repo, files, tmproot):
++    '''snapshot files from working directory.
++    if not using snapshot, -I/-X does not work and recursive diff
++    in tools like kdiff3 and meld displays too many files.'''
++    dirname = os.path.basename(repo.root)
++    if dirname == "":
++        dirname = "root"
++    base = os.path.join(tmproot, dirname)
++    os.mkdir(base)
++    if not ui.quiet:
++        ui.write_err(_('making snapshot of %d files from working dir\n') %
++                     (len(files)))
++    for fn in files:
++        wfn = util.pconvert(fn)
++        ui.note('  %s\n' % wfn)
++        dest = os.path.join(base, wfn)
++        destdir = os.path.dirname(dest)
++        if not os.path.isdir(destdir):
++            os.makedirs(destdir)
++        fp = open(dest, 'wb')
++        for chunk in util.filechunkiter(repo.wopener(wfn)):
++            fp.write(chunk)
++    return dirname
++    
++
+ def dodiff(ui, repo, diffcmd, diffopts, pats, opts):
+-    def snapshot_node(files, node):
+-        '''snapshot files as of some revision'''
+-        mf = repo.changectx(node).manifest()
+-        dirname = os.path.basename(repo.root)
+-        if dirname == "":
+-            dirname = "root"
+-        dirname = '%s.%s' % (dirname, short(node))
+-        base = os.path.join(tmproot, dirname)
+-        os.mkdir(base)
+-        if not ui.quiet:
+-            ui.write_err(_('making snapshot of %d files from rev %s\n') %
+-                         (len(files), short(node)))
+-        for fn in files:
+-            if not fn in mf:
+-                # skipping new file after a merge ?
+-                continue
+-            wfn = util.pconvert(fn)
+-            ui.note('  %s\n' % wfn)
+-            dest = os.path.join(base, wfn)
+-            destdir = os.path.dirname(dest)
+-            if not os.path.isdir(destdir):
+-                os.makedirs(destdir)
+-            data = repo.wwritedata(wfn, repo.file(wfn).read(mf[wfn]))
+-            open(dest, 'wb').write(data)
+-        return dirname
+-
+-    def snapshot_wdir(files):
+-        '''snapshot files from working directory.
+-        if not using snapshot, -I/-X does not work and recursive diff
+-        in tools like kdiff3 and meld displays too many files.'''
+-        dirname = os.path.basename(repo.root)
+-        if dirname == "":
+-            dirname = "root"
+-        base = os.path.join(tmproot, dirname)
+-        os.mkdir(base)
+-        if not ui.quiet:
+-            ui.write_err(_('making snapshot of %d files from working dir\n') %
+-                         (len(files)))
+-        for fn in files:
+-            wfn = util.pconvert(fn)
+-            ui.note('  %s\n' % wfn)
+-            dest = os.path.join(base, wfn)
+-            destdir = os.path.dirname(dest)
+-            if not os.path.isdir(destdir):
+-                os.makedirs(destdir)
+-            fp = open(dest, 'wb')
+-            for chunk in util.filechunkiter(repo.wopener(wfn)):
+-                fp.write(chunk)
+-        return dirname
+-
+     node1, node2 = cmdutil.revpair(repo, opts['rev'])
+     files, matchfn, anypats = cmdutil.matchpats(repo, pats, opts)
+     modified, added, removed, deleted, unknown = repo.status(
+@@ -113,11 +116,11 @@ def dodiff(ui, repo, diffcmd, diffopts, 
+ 
+     tmproot = tempfile.mkdtemp(prefix='extdiff.')
+     try:
+-        dir1 = snapshot_node(modified + removed, node1)
++        dir1 = snapshot_node(ui, repo, modified + removed, node1, tmproot)
+         if node2:
+-            dir2 = snapshot_node(modified + added, node2)
++            dir2 = snapshot_node(ui, repo, modified + added, node2, tmproot)
+         else:
+-            dir2 = snapshot_wdir(modified + added)
++            dir2 = snapshot_wdir(ui, repo, modified + added, tmproot)
+         cmdline = ('%s %s %s %s' %
+                    (util.shellquote(diffcmd), ' '.join(diffopts),
+                     util.shellquote(dir1), util.shellquote(dir2)))
+# HG changeset patch
+# User Brad Schick <schickb@gmail.com>
+# Date 1186436531 25200
+# Node ID 841568ccc09df173e01e61553550d930898106e5
+# Parent  1830bc7676ee213df25f972d1c24c3d62e7f2f78
+extdiff: made it less chatty in non-verbose mode
+
+Made the status info only display in verbose mode since most hg commands aren't so chatty. This also makes it cleaner for other extensions to call extdiff.
+
+diff -r 1830bc7676ee -r 841568ccc09d hgext/extdiff.py
+--- a/hgext/extdiff.py	Mon Aug 06 14:32:23 2007 -0700
++++ b/hgext/extdiff.py	Mon Aug 06 14:42:11 2007 -0700
+@@ -63,9 +63,8 @@ def snapshot_node(ui, repo, files, node,
+     dirname = '%s.%s' % (dirname, short(node))
+     base = os.path.join(tmproot, dirname)
+     os.mkdir(base)
+-    if not ui.quiet:
+-        ui.write_err(_('making snapshot of %d files from rev %s\n') %
+-                     (len(files), short(node)))
++    ui.note(_('making snapshot of %d files from rev %s\n') %
++                 (len(files), short(node)))
+     for fn in files:
+         if not fn in mf:
+             # skipping new file after a merge ?
+@@ -90,9 +89,8 @@ def snapshot_wdir(ui, repo, files, tmpro
+         dirname = "root"
+     base = os.path.join(tmproot, dirname)
+     os.mkdir(base)
+-    if not ui.quiet:
+-        ui.write_err(_('making snapshot of %d files from working dir\n') %
+-                     (len(files)))
++    ui.note(_('making snapshot of %d files from working dir\n') %
++                 (len(files)))
+     for fn in files:
+         wfn = util.pconvert(fn)
+         ui.note('  %s\n' % wfn)
+diff -r 1830bc7676ee -r 841568ccc09d tests/test-extdiff.out
+--- a/tests/test-extdiff.out	Mon Aug 06 14:32:23 2007 -0700
++++ b/tests/test-extdiff.out	Mon Aug 06 14:42:11 2007 -0700
+@@ -1,9 +1,5 @@ adding a
+ adding a
+-making snapshot of 0 files from rev 000000000000
+-making snapshot of 1 files from working dir
+ Only in a: a
+-making snapshot of 0 files from rev 000000000000
+-making snapshot of 1 files from working dir
+ diffing a.000000000000 a
+ hg falabala [OPTION]... [FILE]...
+ 
+@@ -26,14 +22,10 @@ options:
+  -X --exclude  exclude names matching the given patterns
+ 
+ use "hg -v help falabala" to show global options
+-making snapshot of 1 files from rev e27a2475d60a
+-making snapshot of 1 files from rev 5e49ec8d3f05
+ diffing a.e27a2475d60a a.5e49ec8d3f05
+ 1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+ 1 files updated, 0 files merged, 1 files removed, 0 files unresolved
+ 1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+ (branch merge, don't forget to commit)
+-making snapshot of 1 files from rev 5e49ec8d3f05
+-making snapshot of 1 files from working dir
+ diffing a.5e49ec8d3f05 a
+ diff-like tools yield a non-zero exit code
+# HG changeset patch
+# User Brad Schick <schickb@gmail.com>
+# Date 1186437057 25200
+# Node ID 2be225ea57229d8754873207a5f7d71b92c07c4b
+# Parent  841568ccc09df173e01e61553550d930898106e5
+extdiff: do single file diffs from the wc with no copy
+
+Extdiff was always making a temporary directory and copying files even when not required. This change makes extdiff avoid the copy when diffing a single file that lives in the wc. This lets external diff tools edit the working copy file directly. It also lets other extensions resuse the functions in extdiff and get in-place diffs.
+
+diff -r 841568ccc09d -r 2be225ea5722 hgext/extdiff.py
+--- a/hgext/extdiff.py	Mon Aug 06 14:42:11 2007 -0700
++++ b/hgext/extdiff.py	Mon Aug 06 14:50:57 2007 -0700
+@@ -113,12 +113,34 @@ def dodiff(ui, repo, diffcmd, diffopts, 
+         return 0
+ 
+     tmproot = tempfile.mkdtemp(prefix='extdiff.')
++    dir2root = ''
+     try:
++        # Always make a copy of node1
+         dir1 = snapshot_node(ui, repo, modified + removed, node1, tmproot)
++        changes = len(modified) + len(removed) + len(added)
++
++        # If node2 in not the wc or there is >1 change, copy it
+         if node2:
+             dir2 = snapshot_node(ui, repo, modified + added, node2, tmproot)
++        elif changes > 1:
++            dir2 = snapshot_wdir(ui, repo, modified + added, tmproot)
+         else:
+-            dir2 = snapshot_wdir(ui, repo, modified + added, tmproot)
++            # This lets the diff tool open the changed file directly
++            dir2 = ''
++            dir2root = repo.root
++
++        # If only one change, diff the files instead of the directories
++        if changes == 1 :
++            if len(modified):
++                dir1 = os.path.join(dir1, util.localpath(modified[0]))
++                dir2 = os.path.join(dir2root, dir2, util.localpath(modified[0]))  
++            elif len(removed) :
++                dir1 = os.path.join(dir1, util.localpath(removed[0]))
++                dir2 = os.devnull
++            else:
++                dir1 = os.devnull
++                dir2 = os.path.join(dir2root, dir2, util.localpath(added[0]))  
++    
+         cmdline = ('%s %s %s %s' %
+                    (util.shellquote(diffcmd), ' '.join(diffopts),
+                     util.shellquote(dir1), util.shellquote(dir2)))
+diff -r 841568ccc09d -r 2be225ea5722 tests/test-extdiff
+--- a/tests/test-extdiff	Mon Aug 06 14:42:11 2007 -0700
++++ b/tests/test-extdiff	Mon Aug 06 14:50:57 2007 -0700
+@@ -6,7 +6,9 @@ hg init a
+ hg init a
+ cd a
+ echo a > a
++echo b > b
+ hg add
++# should diff cloned directories
+ hg extdiff -o -r $opt
+ 
+ echo "[extdiff]" >> $HGRCPATH
+@@ -22,13 +24,17 @@ echo b >> a
+ echo b >> a
+ hg ci -d '1 0' -mtest2
+ 
++# should diff cloned files directly 
+ hg falabala -r 0:1
+ 
+ # test diff during merge
+ hg update 0
+-echo b >> b
+-hg add b
++echo c >> c
++hg add c
+ hg ci -m "new branch" -d '1 0'
+ hg update -C 1
+ hg merge tip
+-hg falabala || echo "diff-like tools yield a non-zero exit code"
++# should diff cloned file against wc file 
++hg falabala > out || echo "diff-like tools yield a non-zero exit code"
++# cleanup the output since the wc is a tmp directory
++sed  's:\(.* \).*\(\/test-extdiff\):\1[tmp]\2:' out
+diff -r 841568ccc09d -r 2be225ea5722 tests/test-extdiff.out
+--- a/tests/test-extdiff.out	Mon Aug 06 14:42:11 2007 -0700
++++ b/tests/test-extdiff.out	Mon Aug 06 14:50:57 2007 -0700
+@@ -1,5 +1,7 @@ adding a
+ adding a
++adding b
+ Only in a: a
++Only in a: b
+ diffing a.000000000000 a
+ hg falabala [OPTION]... [FILE]...
+ 
+@@ -22,10 +24,10 @@ options:
+  -X --exclude  exclude names matching the given patterns
+ 
+ use "hg -v help falabala" to show global options
+-diffing a.e27a2475d60a a.5e49ec8d3f05
++diffing a.8a5febb7f867/a a.34eed99112ab/a
+ 1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+ 1 files updated, 0 files merged, 1 files removed, 0 files unresolved
+ 1 files updated, 0 files merged, 0 files removed, 0 files unresolved
+ (branch merge, don't forget to commit)
+-diffing a.5e49ec8d3f05 a
+ diff-like tools yield a non-zero exit code
++diffing a.34eed99112ab/c [tmp]/test-extdiff/a/c
