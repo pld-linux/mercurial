@@ -11,6 +11,8 @@ License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
 # Source0-md5:	9f8dd7fa6f8886f77be9b923f008504c
+Source1:    gtools.py
+Patch0:     %{name}-gtools.patch
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
 BuildRequires:	python >= 1:2.5
@@ -77,6 +79,8 @@ hgk=
 
 %prep
 %setup -q
+#%patch0 -p1
+install %{SOURCE1} hgext/gtools.py
 
 %build
 %{__python} setup.py build
