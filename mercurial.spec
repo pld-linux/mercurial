@@ -15,7 +15,7 @@ Source1:	gtools.py
 Patch0:		%{name}-gtools.patch
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
-BuildRequires:	python >= 1:2.5
+BuildRequires:	python >= 1:2.3
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	xmlto
@@ -120,7 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/%{name}/*.py[co]
 %{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/templates
+%if "%{py_ver}" > "2.4"
 %{py_sitedir}/*.egg-info
+%endif
 %{_mandir}/man1/*.1*
 %{_mandir}/man5/*.5*
 
