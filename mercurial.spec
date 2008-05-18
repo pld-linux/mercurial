@@ -1,3 +1,6 @@
+# NOTE
+# - Warning: tests will fail if at same time tests are running (shared hw for
+#   builders) as fixed port 20059 is used.
 #
 # Conditional build:
 %bcond_without	tests	# don't run tests
