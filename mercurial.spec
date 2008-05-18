@@ -1,6 +1,8 @@
 # NOTE
 # - Warning: tests will fail if at same time tests are running (shared hw for
 #   builders) as fixed port 20059 is used.
+# - Warning: tests will fail inside vserver as binding to localhost, peername
+#   is not 127.0.0.1 (will be ip of interfaces/0/ip instead)
 #
 # Conditional build:
 %bcond_without	tests	# don't run tests
