@@ -10,12 +10,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	1.0
-Release:	2
+Version:	1.0.1
+Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	9f8dd7fa6f8886f77be9b923f008504c
+# Source0-md5:	a4ef7eb2c8818404a459e3be05feff6f
 Source1:	gtools.py
 Patch0:		%{name}-gtools.patch
 URL:		http://www.selenic.com/mercurial/
