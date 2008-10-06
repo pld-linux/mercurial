@@ -21,6 +21,7 @@ Patch0:		%{name}-gtools.patch
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
 BuildRequires:	python >= 1:2.3
+BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	xmlto
