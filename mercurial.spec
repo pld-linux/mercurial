@@ -10,12 +10,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	1.2.1
+Version:	1.3
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	24d6994cc58b353398e11c7a19cf1d19
+# Source0-md5:	d25a867e0ef835faafdbe1e82e239945
 Source1:	gtools.py
 Patch0:		%{name}-gtools.patch
 URL:		http://www.selenic.com/mercurial/
@@ -128,9 +128,14 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/%{name}/templates
 %dir %{py_sitedir}/%{name}/locale
 %lang(da) %{py_sitedir}/%{name}/locale/da
+%lang(de) %{py_sitedir}/%{name}/locale/de
+%lang(el) %{py_sitedir}/%{name}/locale/el
+%lang(fr) %{py_sitedir}/%{name}/locale/fr
 %lang(it) %{py_sitedir}/%{name}/locale/it
 %lang(ja) %{py_sitedir}/%{name}/locale/ja
-%lang(zh) %{py_sitedir}/%{name}/locale/zh
+%lang(pt_BR) %{py_sitedir}/%{name}/locale/pt_BR
+%lang(zh_CN) %{py_sitedir}/%{name}/locale/zh_CN
+%lang(zh_TW) %{py_sitedir}/%{name}/locale/zh_TW
 %if "%{py_ver}" > "2.4"
 %{py_sitedir}/*.egg-info
 %endif
