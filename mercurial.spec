@@ -10,12 +10,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	1.3
+Version:	1.4
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	d25a867e0ef835faafdbe1e82e239945
+# Source0-md5:	951ebd4a8153eaa3c56fc0ce2575ab70
 Source1:	gtools.py
 Patch0:		%{name}-gtools.patch
 URL:		http://www.selenic.com/mercurial/
@@ -124,6 +124,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_sitedir}/%{name}
 %attr(755,root,root) %{py_sitedir}/%{name}/*.so
 %{py_sitedir}/%{name}/*.py[co]
+%{py_sitedir}/%{name}/help
 %{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/templates
 %dir %{py_sitedir}/%{name}/locale
@@ -134,6 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(it) %{py_sitedir}/%{name}/locale/it
 %lang(ja) %{py_sitedir}/%{name}/locale/ja
 %lang(pt_BR) %{py_sitedir}/%{name}/locale/pt_BR
+%lang(sv) %{py_sitedir}/%{name}/locale/sv
 %lang(zh_CN) %{py_sitedir}/%{name}/locale/zh_CN
 %lang(zh_TW) %{py_sitedir}/%{name}/locale/zh_TW
 %if "%{py_ver}" > "2.4"
