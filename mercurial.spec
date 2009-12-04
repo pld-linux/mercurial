@@ -20,10 +20,12 @@ Source1:	gtools.py
 Patch0:		%{name}-gtools.patch
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
+BuildRequires:	gettext-devel
 BuildRequires:	python >= 1:2.3
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
+%{?with_tests:BuildRequires:	unzip}
 BuildRequires:	xmlto
 %pyrequires_eq	python-modules
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
