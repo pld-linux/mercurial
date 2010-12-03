@@ -1,0 +1,10 @@
+--- mercurial-1.7.2/mercurial/demandimport.py~	2010-12-02 01:46:11.000000000 +0100
++++ mercurial-1.7.2/mercurial/demandimport.py	2010-12-03 19:56:17.506154254 +0100
+@@ -134,6 +134,7 @@
+     # raise ImportError if x not defined
+     '__main__',
+     '_ssl', # conditional imports in the stdlib, issue1964
++    'gobject._gobject',
+     ]
+ 
+ def enable():

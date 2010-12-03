@@ -10,14 +10,15 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	1.6
+Version:	1.7.2
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	e97772cb424d29d9382c41daafa6f92d
+# Source0-md5:	e9e99a0a20ded8f6d9463ffb94021b12
 Source1:	gtools.py
 Patch0:		%{name}-gtools.patch
+Patch1:		%{name}-doc.patch
 URL:		http://www.selenic.com/mercurial/
 BuildRequires:	asciidoc
 BuildRequires:	gettext-devel
@@ -88,13 +89,12 @@ hgk=
 %prep
 %setup -q
 #%patch0 -p1
+%patch1 -p1
 install %{SOURCE1} hgext/gtools.py
 
 %build
 %{__python} setup.py build
 %{__make} -C doc
-
-rm tests/test-hgweb
 
 %{?with_tests:cd tests && %{__python} run-tests.py --verbose}
 
@@ -137,6 +137,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(it) %{py_sitedir}/%{name}/locale/it
 %lang(ja) %{py_sitedir}/%{name}/locale/ja
 %lang(pt_BR) %{py_sitedir}/%{name}/locale/pt_BR
+%lang(ro) %{py_sitedir}/%{name}/locale/ro
 %lang(sv) %{py_sitedir}/%{name}/locale/sv
 %lang(zh_CN) %{py_sitedir}/%{name}/locale/zh_CN
 %lang(zh_TW) %{py_sitedir}/%{name}/locale/zh_TW
