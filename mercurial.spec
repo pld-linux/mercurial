@@ -10,12 +10,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	1.8.2
+Version:	1.9
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	a1634b9b709ecc70662f3257abece2c7
+# Source0-md5:	d4842129fa2732eb6ed1180467bc32e2
 Source1:	gtools.py
 Patch0:		%{name}-gtools.patch
 Patch1:		%{name}-doc.patch
@@ -24,6 +24,7 @@ BuildRequires:	asciidoc
 BuildRequires:	gettext-devel
 BuildRequires:	python >= 1:2.3
 BuildRequires:	python-devel
+BuildRequires:	python-docutils
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 %{?with_tests:BuildRequires:	unzip}
@@ -128,6 +129,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/%{name}/*.py[co]
 %{py_sitedir}/%{name}/help
 %{py_sitedir}/%{name}/hgweb
+%{py_sitedir}/%{name}/httpclient
 %{py_sitedir}/%{name}/templates
 %dir %{py_sitedir}/%{name}/locale
 %lang(da) %{py_sitedir}/%{name}/locale/da
@@ -138,6 +140,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(ja) %{py_sitedir}/%{name}/locale/ja
 %lang(pt_BR) %{py_sitedir}/%{name}/locale/pt_BR
 %lang(ro) %{py_sitedir}/%{name}/locale/ro
+%lang(ru) %{py_sitedir}/%{name}/locale/ru
 %lang(sv) %{py_sitedir}/%{name}/locale/sv
 %lang(zh_CN) %{py_sitedir}/%{name}/locale/zh_CN
 %lang(zh_TW) %{py_sitedir}/%{name}/locale/zh_TW
