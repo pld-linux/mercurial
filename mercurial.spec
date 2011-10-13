@@ -7,19 +7,27 @@
 # Conditional build:
 %bcond_without	tests	# don't run tests
 #
+%define         webapp          hgweb
+%define         webappdir       %{_sysconfdir}/webapps/%{webapp}
+%define         appdir          %{_datadir}/%{webapp}
+%define         cgibindir       %{_prefix}/lib/cgi-bin
+
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	1.9.2
+Version:	1.9.3
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
-Source0:	http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
-# Source0-md5:	0bda8040e2626e70d3d1a0654b0b03f2
+Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
+# Source0-md5:	f309b084aaf58773e9f4f4d66c49622a
 Source1:	gtools.py
+Source2:	%{name}-%{webapp}.config
+# TODO: provide default config
+Source3:	%{name}-%{webapp}-httpd.config
 Patch0:		%{name}-gtools.patch
 Patch1:		%{name}-doc.patch
-URL:		http://www.selenic.com/mercurial/
+URL:		http://mercurial.selenic.com/
 BuildRequires:	asciidoc
 BuildRequires:	gettext-devel
 BuildRequires:	python >= 1:2.3
@@ -64,6 +72,20 @@ projektów. Możliwości obejmują:
 - mały kod podstawowy w Pythonie
 - licencja GPL
 
+%package hgweb
+Summary:        Scripts for serving mercurial repositories over HTTP
+Summary(pl.UTF-8):      Skrypty do serwowania repozytoriów mercuriala przez HTTP
+Group:          Development/Version Control
+Requires:       %{name} = %{version}-%{release}
+Requires:	apache-mod_wsgi >= 1.1
+Requires:       webapps
+
+%description hgweb
+CGI scripts for serving mercurial repositories
+
+%description hgweb -l pl.UTF-8
+Skrypty CGI do serwowania repozytorió w mercuriala
+
 %package hgk
 Summary:	GUI for mercurial
 Summary(pl.UTF-8):	Graficzny interfejs użytkownika dla systemu Mercurial
@@ -97,6 +119,8 @@ install %{SOURCE1} hgext/gtools.py
 %{__python} setup.py build
 %{__make} -C doc
 
+#rm tests/test-hgweb
+
 %{?with_tests:cd tests && %{__python} run-tests.py --verbose}
 
 %install
@@ -105,6 +129,15 @@ rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install \
 	--optimize=2 \
 	--root=$RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT%{cgibindir}
+install *.cgi $RPM_BUILD_ROOT%{cgibindir}/
+
+install -d $RPM_BUILD_ROOT%{webappdir}
+install %{SOURCE2} $RPM_BUILD_ROOT%{webappdir}/%{webapp}.config
+
+> $RPM_BUILD_ROOT%{webappdir}/httpd.conf
+> $RPM_BUILD_ROOT%{webappdir}/apache.conf
 
 install contrib/hgk $RPM_BUILD_ROOT%{_bindir}
 
@@ -118,6 +151,18 @@ install doc/*.5 $RPM_BUILD_ROOT%{_mandir}/man5
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%triggerin hgweb -- apache1 < 1.3.37-3, apache1-base
+%webapp_register apache %{webapp}
+
+%triggerun hgweb -- apache1 < 1.3.37-3, apache1-base
+%webapp_unregister apache %{webapp}
+
+%triggerin hgweb -- apache < 2.2.0, apache-base
+%webapp_register httpd %{webapp}
+
+%triggerun hgweb -- apache < 2.2.0, apache-base
+%webapp_unregister httpd %{webapp}
 
 %files
 %defattr(644,root,root,755)
@@ -149,6 +194,15 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %{_mandir}/man1/*.1*
 %{_mandir}/man5/*.5*
+
+%files hgweb
+%defattr(644,root,root,755)
+%dir %{cgibindir}
+%attr(755,root,root) %{cgibindir}/*.cgi
+%dir %{webappdir}
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{webappdir}/apache.conf
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{webappdir}/hgweb.config
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{webappdir}/httpd.conf
 
 %files hgk
 %defattr(644,root,root,755)
