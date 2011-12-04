@@ -1,9 +1,10 @@
---- mercurial-1.7.2/mercurial/demandimport.py~	2010-12-02 01:46:11.000000000 +0100
-+++ mercurial-1.7.2/mercurial/demandimport.py	2010-12-03 19:56:17.506154254 +0100
-@@ -134,6 +134,7 @@
-     # raise ImportError if x not defined
-     '__main__',
+diff -uNr mercurial-2.0.1/mercurial/demandimport.py mercurial-2.0.1.new/mercurial/demandimport.py
+--- mercurial-2.0.1/mercurial/demandimport.py	2011-12-01 22:55:32.000000000 +0100
++++ mercurial-2.0.1.new/mercurial/demandimport.py	2011-12-04 12:34:49.562109291 +0100
+@@ -144,6 +144,7 @@
      '_ssl', # conditional imports in the stdlib, issue1964
+     'rfc822',
+     'mimetools',
 +    'gobject._gobject',
      ]
  

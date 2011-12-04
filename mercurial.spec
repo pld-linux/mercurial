@@ -15,22 +15,21 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	1.9.3
+Version:	2.0.1
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
-# Source0-md5:	f309b084aaf58773e9f4f4d66c49622a
+# Source0-md5:	16576b3089a88a84a35edc30e17a03a9
 Source1:	gtools.py
 Source2:	%{name}-%{webapp}.config
 # TODO: provide default config
 Source3:	%{name}-%{webapp}-httpd.config
-Patch0:		%{name}-gtools.patch
-Patch1:		%{name}-doc.patch
+Patch0:		%{name}-doc.patch
 URL:		http://mercurial.selenic.com/
 BuildRequires:	asciidoc
 BuildRequires:	gettext-devel
-BuildRequires:	python >= 1:2.3
+BuildRequires:	python >= 1:2.4
 BuildRequires:	python-devel
 BuildRequires:	python-docutils
 BuildRequires:	rpm-pythonprov
@@ -73,12 +72,12 @@ projektów. Możliwości obejmują:
 - licencja GPL
 
 %package hgweb
-Summary:        Scripts for serving mercurial repositories over HTTP
-Summary(pl.UTF-8):      Skrypty do serwowania repozytoriów mercuriala przez HTTP
-Group:          Development/Version Control
-Requires:       %{name} = %{version}-%{release}
+Summary:	Scripts for serving mercurial repositories over HTTP
+Summary(pl.UTF-8):	Skrypty do serwowania repozytoriów mercuriala przez HTTP
+Group:		Development/Version Control
+Requires:	%{name} = %{version}-%{release}
 Requires:	apache-mod_wsgi >= 1.1
-Requires:       webapps
+Requires:	webapps
 
 %description hgweb
 CGI scripts for serving mercurial repositories
@@ -111,15 +110,12 @@ hgk=
 
 %prep
 %setup -q
-#%patch0 -p1
-%patch1 -p1
+%patch0 -p1
 install %{SOURCE1} hgext/gtools.py
 
 %build
 %{__python} setup.py build
 %{__make} -C doc
-
-#rm tests/test-hgweb
 
 %{?with_tests:cd tests && %{__python} run-tests.py --verbose}
 
