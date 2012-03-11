@@ -16,7 +16,7 @@ Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
 Version:	2.1.1
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
@@ -32,6 +32,7 @@ BuildRequires:	gettext-devel
 BuildRequires:	python >= 1:2.4
 BuildRequires:	python-devel
 BuildRequires:	python-docutils
+BuildRequires:	python-pygtk-gtk
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 %{?with_tests:BuildRequires:	unzip}
