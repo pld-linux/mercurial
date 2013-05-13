@@ -15,19 +15,18 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	2.2.3
+Version:	2.6
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
-# Source0-md5:	f4c70af3892d964b83b2718bde44c2f8
+# Source0-md5:	d012d8bb5f85369d3b6a630a80667170
 Source1:	gtools.py
 Source2:	%{name}-%{webapp}.config
 # TODO: provide default config
 Source3:	%{name}-%{webapp}-httpd.config
 Patch0:		%{name}-doc.patch
 URL:		http://mercurial.selenic.com/
-BuildRequires:	asciidoc
 BuildRequires:	gettext-devel
 BuildRequires:	python >= 1:2.4
 BuildRequires:	python-devel
@@ -36,7 +35,6 @@ BuildRequires:	python-pygtk-gtk
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 %{?with_tests:BuildRequires:	unzip}
-BuildRequires:	xmlto
 %pyrequires_eq	python-modules
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
