@@ -27,6 +27,7 @@ Source2:	%{name}-%{webapp}.config
 Source3:	%{name}-%{webapp}-apache.config
 Source4:	%{name}-%{webapp}-httpd.config
 Patch0:		%{name}-doc.patch
+Patch1:		%{name}-clean-environment.patch
 URL:		http://mercurial.selenic.com/
 BuildRequires:	gettext-devel
 BuildRequires:	python >= 1:2.4
@@ -112,6 +113,7 @@ hgk=
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p0
 install %{SOURCE1} hgext/gtools.py
 
 %build

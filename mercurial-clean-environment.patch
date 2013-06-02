@@ -1,0 +1,15 @@
+--- tests/run-tests.py~	2013-05-15 00:43:40.000000000 +0100
++++ tests/run-tests.py	2013-06-02 19:51:26.913166446 +0100
+@@ -1186,6 +1186,12 @@
+     DAEMON_PIDS = os.environ["DAEMON_PIDS"] = os.path.join(HGTMP, 'daemon.pids')
+     HGRCPATH = os.environ["HGRCPATH"] = os.path.join(HGTMP, '.hgrc')
+ 
++    try:
++       del os.environ['GIT_DIR']
++       del os.environ['GIT_WORK_TREE']
++    except KeyError:
++       pass
++
+     try:
+         if INST:
+             installhg(options)
