@@ -120,7 +120,7 @@ install %{SOURCE1} hgext/gtools.py
 %{__python} setup.py build
 %{__make} -C doc
 
-%{?with_tests:cd tests && %{__python} run-tests.py --verbose}
+%{?with_tests:cd tests && %{__python} run-tests.py %{?_smp_mflags} --verbose}
 
 %install
 rm -rf $RPM_BUILD_ROOT
