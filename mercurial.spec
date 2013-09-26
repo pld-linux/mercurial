@@ -24,8 +24,7 @@ Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
 Source1:	gtools.py
 Source2:	%{name}-%{webapp}.config
 # TODO: provide default config
-Source3:	%{name}-%{webapp}-apache.config
-Source4:	%{name}-%{webapp}-httpd.config
+Source3:	%{name}-%{webapp}-httpd.config
 Patch0:		%{name}-doc.patch
 Patch1:		%{name}-clean-environment.patch
 URL:		http://mercurial.selenic.com/
@@ -38,7 +37,6 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 %{?with_tests:BuildRequires:	unzip}
 %pyrequires_eq	python-modules
-Conflicts:	apache-base < 2.4.0-1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -136,7 +134,7 @@ install -d $RPM_BUILD_ROOT%{webappdir}
 install %{SOURCE2} $RPM_BUILD_ROOT%{webappdir}/%{webapp}.config
 
 install %{SOURCE3} $RPM_BUILD_ROOT%{webappdir}/apache.conf
-install %{SOURCE4} $RPM_BUILD_ROOT%{webappdir}/httpd.conf
+install %{SOURCE3} $RPM_BUILD_ROOT%{webappdir}/httpd.conf
 
 install contrib/hgk $RPM_BUILD_ROOT%{_bindir}
 
@@ -157,10 +155,10 @@ rm -rf $RPM_BUILD_ROOT
 %triggerun hgweb -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{webapp}
 
-%triggerin hgweb -- apache-base
+%triggerin hgweb -- apache < 2.2.0, apache-base
 %webapp_register httpd %{webapp}
 
-%triggerun hgweb -- apache-base
+%triggerun hgweb -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{webapp}
 
 %files
