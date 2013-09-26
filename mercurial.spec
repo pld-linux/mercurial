@@ -6,24 +6,22 @@
 #
 # Conditional build:
 %bcond_without	tests	# don't run tests
-#
+
 %define         webapp          hgweb
 %define         webappdir       %{_sysconfdir}/webapps/%{webapp}
 %define         appdir          %{_datadir}/%{webapp}
 %define         cgibindir       %{_prefix}/lib/cgi-bin
-
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
 Version:	2.6.2
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
 # Source0-md5:	55f6ea5982cf87836113376174826e8c
 Source1:	gtools.py
 Source2:	%{name}-%{webapp}.config
-# TODO: provide default config
 Source3:	%{name}-%{webapp}-httpd.config
 Patch0:		%{name}-doc.patch
 Patch1:		%{name}-clean-environment.patch
@@ -36,7 +34,7 @@ BuildRequires:	python-pygtk-gtk
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 %{?with_tests:BuildRequires:	unzip}
-%pyrequires_eq	python-modules
+Requires:	python-modules
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -90,7 +88,7 @@ Summary:	GUI for mercurial
 Summary(pl.UTF-8):	Graficzny interfejs użytkownika dla systemu Mercurial
 Group:		Development/Version Control
 Requires:	%{name} = %{version}-%{release}
-%pyrequires_eq	python-modules
+Requires:	python-modules
 
 %description hgk
 A tool called that allows browsing the history of a repository in a
@@ -112,35 +110,34 @@ hgk=
 %setup -q
 %patch0 -p1
 %patch1 -p0
-install %{SOURCE1} hgext/gtools.py
+cp -p %{SOURCE1} hgext/gtools.py
 
 %build
 %{__python} setup.py build
 %{__make} -C doc
 
-%{?with_tests:cd tests && %{__python} run-tests.py %{?_smp_mflags} --verbose}
+%if %{with tests}
+cd tests
+%{__python} run-tests.py %{?_smp_mflags} --verbose
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %{__python} setup.py install \
 	--optimize=2 \
 	--root=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{cgibindir}
-install *.cgi $RPM_BUILD_ROOT%{cgibindir}/
+install -d $RPM_BUILD_ROOT{%{cgibindir},%{webappdir}}
+install -p *.cgi $RPM_BUILD_ROOT%{cgibindir}
+cp -p %{SOURCE2} $RPM_BUILD_ROOT%{webappdir}/%{webapp}.config
+cp -p %{SOURCE3} $RPM_BUILD_ROOT%{webappdir}/apache.conf
+cp -p %{SOURCE3} $RPM_BUILD_ROOT%{webappdir}/httpd.conf
 
-install -d $RPM_BUILD_ROOT%{webappdir}
-install %{SOURCE2} $RPM_BUILD_ROOT%{webappdir}/%{webapp}.config
-
-install %{SOURCE3} $RPM_BUILD_ROOT%{webappdir}/apache.conf
-install %{SOURCE3} $RPM_BUILD_ROOT%{webappdir}/httpd.conf
-
-install contrib/hgk $RPM_BUILD_ROOT%{_bindir}
+install -p contrib/hgk $RPM_BUILD_ROOT%{_bindir}
 
 install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5}
-install doc/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
-install doc/*.5 $RPM_BUILD_ROOT%{_mandir}/man5
+cp -p doc/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
+cp -p doc/*.5 $RPM_BUILD_ROOT%{_mandir}/man5
 
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
