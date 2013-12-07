@@ -14,12 +14,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	2.6.2
-Release:	2
+Version:	2.8.1
+Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
-# Source0-md5:	55f6ea5982cf87836113376174826e8c
+# Source0-md5:	bede5869f9b5d09ab3269bac472495e7
 Source1:	gtools.py
 Source2:	%{name}-%{webapp}.config
 Source3:	%{name}-%{webapp}-httpd.config
