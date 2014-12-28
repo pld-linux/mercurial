@@ -26,7 +26,7 @@ Source3:	%{name}-%{webapp}-httpd.config
 Patch0:		%{name}-doc.patch
 Patch1:		%{name}-clean-environment.patch
 URL:		http://mercurial.selenic.com/
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	python >= 1:2.4
 BuildRequires:	python-devel
 BuildRequires:	python-docutils
