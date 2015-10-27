@@ -73,6 +73,7 @@ projektów. Możliwości obejmują:
 Summary:	Mercurial Distributed SCM
 Group:		Libraries/Python
 Requires:	python-modules
+Conflicts:	mercurial < 3.5.2-2
 
 %description -n python-%{name}
 Mercurial Python libraries
