@@ -15,7 +15,7 @@ Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
 Version:	3.5.2
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
@@ -34,7 +34,7 @@ BuildRequires:	python-pygtk-gtk
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 %{?with_tests:BuildRequires:	unzip}
-Requires:	python-modules
+Requires:	python-%{name} = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -68,6 +68,14 @@ projektów. Możliwości obejmują:
 - zintegrowany samodzielny interfejs WWW
 - mały kod podstawowy w Pythonie
 - licencja GPL
+
+%package -n python-%{name}
+Summary:	Mercurial Distributed SCM
+Group:		Libraries/Python
+Requires:	python-modules
+
+%description -n python-%{name}
+Mercurial Python libraries
 
 %package hgweb
 Summary:	Scripts for serving mercurial repositories over HTTP
@@ -162,6 +170,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc CONTRIBUTORS README
 %attr(755,root,root) %{_bindir}/hg
+%{_mandir}/man1/*.1*
+%{_mandir}/man5/*.5*
+
+%files -n python-%{name}
+%defattr(644,root,root,755)
 %{py_sitedir}/hgext
 %dir %{py_sitedir}/%{name}
 %attr(755,root,root) %{py_sitedir}/%{name}/*.so
@@ -184,11 +197,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(sv) %{py_sitedir}/%{name}/locale/sv
 %lang(zh_CN) %{py_sitedir}/%{name}/locale/zh_CN
 %lang(zh_TW) %{py_sitedir}/%{name}/locale/zh_TW
-%if "%{py_ver}" > "2.4"
 %{py_sitedir}/*.egg-info
-%endif
-%{_mandir}/man1/*.1*
-%{_mandir}/man5/*.5*
 
 %files hgweb
 %defattr(644,root,root,755)
