@@ -1,11 +1,12 @@
-diff -uNr mercurial-2.0.1/mercurial/demandimport.py mercurial-2.0.1.new/mercurial/demandimport.py
---- mercurial-2.0.1/mercurial/demandimport.py	2011-12-01 22:55:32.000000000 +0100
-+++ mercurial-2.0.1.new/mercurial/demandimport.py	2011-12-04 12:34:49.562109291 +0100
-@@ -144,6 +144,7 @@
-     '_ssl', # conditional imports in the stdlib, issue1964
+--- mercurial-3.5.2/mercurial/demandimport.py~	2015-10-01 19:06:55.000000000 +0200
++++ mercurial-3.5.2/mercurial/demandimport.py	2015-10-27 10:27:30.377611999 +0100
+@@ -173,7 +173,8 @@ ignore = [
      'rfc822',
      'mimetools',
-+    'gobject._gobject',
+     # setuptools 8 expects this module to explode early when not on windows
+-    'distutils.msvc9compiler'
++    'distutils.msvc9compiler',
++    'gobject._gobject'
      ]
  
- def enable():
+ def isenabled():

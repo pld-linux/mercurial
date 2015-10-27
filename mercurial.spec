@@ -14,12 +14,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony SCM
 Name:		mercurial
-Version:	2.8.1
+Version:	3.5.2
 Release:	1
 License:	GPL v2
 Group:		Development/Version Control
 Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
-# Source0-md5:	bede5869f9b5d09ab3269bac472495e7
+# Source0-md5:	47461349624dc83b33b2b038242f104b
 Source1:	gtools.py
 Source2:	%{name}-%{webapp}.config
 Source3:	%{name}-%{webapp}-httpd.config
@@ -166,6 +166,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py_sitedir}/%{name}
 %attr(755,root,root) %{py_sitedir}/%{name}/*.so
 %{py_sitedir}/%{name}/*.py[co]
+%{py_sitedir}/%{name}/default.d
 %{py_sitedir}/%{name}/help
 %{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/httpclient
