@@ -135,6 +135,8 @@ rm -rf $RPM_BUILD_ROOT
 	--optimize=2 \
 	--root=$RPM_BUILD_ROOT
 
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/mercurial/dummycert.pem
+
 install -d $RPM_BUILD_ROOT{%{cgibindir},%{webappdir}}
 install -p *.cgi $RPM_BUILD_ROOT%{cgibindir}
 cp -p %{SOURCE2} $RPM_BUILD_ROOT%{webappdir}/%{webapp}.config
