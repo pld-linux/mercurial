@@ -12,25 +12,25 @@
 %define         appdir          %{_datadir}/%{webapp}
 %define         cgibindir       %{_prefix}/lib/cgi-bin
 Summary:	Mercurial Distributed SCM
-Summary(pl.UTF-8):	Mercurial - rozproszony SCM
+Summary(pl.UTF-8):	Mercurial - rozproszony system kontroli wersji
 Name:		mercurial
-Version:	3.5.2
-Release:	2
-License:	GPL v2
+Version:	3.6
+Release:	1
+License:	GPL v2+
 Group:		Development/Version Control
-Source0:	http://mercurial.selenic.com/release/%{name}-%{version}.tar.gz
-# Source0-md5:	47461349624dc83b33b2b038242f104b
+Source0:	https://www.mercurial-scm.org/release/%{name}-%{version}.tar.gz
+# Source0-md5:	be5bafca4f9d422e1781807da2467e36
 Source1:	gtools.py
 Source2:	%{name}-%{webapp}.config
 Source3:	%{name}-%{webapp}-httpd.config
 Patch0:		%{name}-doc.patch
 Patch1:		%{name}-clean-environment.patch
-URL:		http://mercurial.selenic.com/
+URL:		https://www.mercurial-scm.org/
 BuildRequires:	gettext-tools
-BuildRequires:	python >= 1:2.4
-BuildRequires:	python-devel
+BuildRequires:	python >= 1:2.6
+BuildRequires:	python-devel >= 1:2.6
 BuildRequires:	python-docutils
-BuildRequires:	python-pygtk-gtk
+BuildRequires:	python-pygtk-gtk >= 2:2.0
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 %{?with_tests:BuildRequires:	unzip}
@@ -70,27 +70,31 @@ projektów. Możliwości obejmują:
 - licencja GPL
 
 %package -n python-%{name}
-Summary:	Mercurial Distributed SCM
+Summary:	Mercurial Distributed SCM - Python libraries
+Summary(pl.UTF-8):	Rozproszony system kontroli wersji Mercurial - biblioteki Pythona
 Group:		Libraries/Python
-Requires:	python-modules
+Requires:	python-modules >= 1:2.6
 Conflicts:	mercurial < 3.5.2-2
 
 %description -n python-%{name}
-Mercurial Python libraries
+Mercurial Distributed SCM - Python libraries.
+
+%description -n python-%{name} -l pl.UTF-8
+Rozproszony system kontroli wersji Mercurial - biblioteki Pythona.
 
 %package hgweb
-Summary:	Scripts for serving mercurial repositories over HTTP
-Summary(pl.UTF-8):	Skrypty do serwowania repozytoriów mercuriala przez HTTP
+Summary:	Scripts for serving Mercurial repositories over HTTP
+Summary(pl.UTF-8):	Skrypty do serwowania repozytoriów Mercuriala przez HTTP
 Group:		Development/Version Control
 Requires:	%{name} = %{version}-%{release}
 Requires:	apache-mod_wsgi >= 1.1
 Requires:	webapps
 
 %description hgweb
-CGI scripts for serving mercurial repositories
+CGI scripts for serving Mercurial repositories.
 
 %description hgweb -l pl.UTF-8
-Skrypty CGI do serwowania repozytorió w mercuriala
+Skrypty CGI do serwowania repozytoriów Mercuriala.
 
 %package hgk
 Summary:	GUI for mercurial
@@ -200,12 +204,11 @@ rm -rf $RPM_BUILD_ROOT
 %lang(sv) %{py_sitedir}/%{name}/locale/sv
 %lang(zh_CN) %{py_sitedir}/%{name}/locale/zh_CN
 %lang(zh_TW) %{py_sitedir}/%{name}/locale/zh_TW
-%{py_sitedir}/*.egg-info
+%{py_sitedir}/mercurial-%{version}-py*.egg-info
 
 %files hgweb
 %defattr(644,root,root,755)
-%dir %{cgibindir}
-%attr(755,root,root) %{cgibindir}/*.cgi
+%attr(755,root,root) %{cgibindir}/hgweb.cgi
 %dir %{webappdir}
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{webappdir}/apache.conf
 %config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %{webappdir}/hgweb.config
