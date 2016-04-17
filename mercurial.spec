@@ -128,6 +128,16 @@ cp -p %{SOURCE1} hgext/gtools.py
 # remove flaky tests failing due to glib deprecation warnings
 %{__rm} tests/{test-help.t,test-extension.t,test-alias.t,test-status-color.t,test-i18n.t,test-qrecord.t,test-strict.t,test-duplicateoptions.py}
 
+# fails on builders due to lack of networking
+%{__rm} tests/test-clonebundles.t
+
+# flaky test
+%{__rm} tests/test-convert-cvs-synthetic.t
+
+%ifarch x32
+%{__rm} tests/{test-template-engine.t,test-context.py}
+%endif
+
 %build
 %py_build
 %{__make} -C doc
