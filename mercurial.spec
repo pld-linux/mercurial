@@ -131,11 +131,11 @@ cp -p %{SOURCE1} hgext/gtools.py
 # fails on builders due to lack of networking
 %{__rm} tests/test-clonebundles.t
 
-# flaky test
-%{__rm} tests/test-convert-cvs-synthetic.t
+# flaky tests
+%{__rm} tests/{test-template-engine.t,test-convert-cvs-synthetic.t,test-parse-date.t}
 
 %ifarch x32
-%{__rm} tests/{test-template-engine.t,test-context.py}
+%{__rm} tests/test-context.py
 %endif
 
 %build
