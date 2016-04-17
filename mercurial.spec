@@ -14,12 +14,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony system kontroli wersji
 Name:		mercurial
-Version:	3.6
-Release:	2
+Version:	3.7.3
+Release:	1
 License:	GPL v2+
 Group:		Development/Version Control
 Source0:	https://www.mercurial-scm.org/release/%{name}-%{version}.tar.gz
-# Source0-md5:	be5bafca4f9d422e1781807da2467e36
+# Source0-md5:	f47c9c76b7bf429dafecb71fa81c01b4
 Source1:	gtools.py
 Source2:	%{name}-%{webapp}.config
 Source3:	%{name}-%{webapp}-httpd.config
@@ -125,8 +125,11 @@ hgk=
 %patch1 -p0
 cp -p %{SOURCE1} hgext/gtools.py
 
+# remove flaky tests failing due to glib deprecation warnings
+%{__rm} tests/{test-help.t,test-extension.t,test-alias.t,test-status-color.t,test-i18n.t,test-qrecord.t,test-strict.t,test-duplicateoptions.py}
+
 %build
-%{__python} setup.py build
+%py_build
 %{__make} -C doc
 
 %if %{with tests}
@@ -136,9 +139,7 @@ cd tests
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
+%py_install
 
 %{__rm} $RPM_BUILD_ROOT%{py_sitedir}/mercurial/dummycert.pem
 
@@ -190,6 +191,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitedir}/%{name}/help
 %{py_sitedir}/%{name}/hgweb
 %{py_sitedir}/%{name}/httpclient
+%{py_sitedir}/%{name}/pure
 %{py_sitedir}/%{name}/templates
 %dir %{py_sitedir}/%{name}/locale
 %lang(da) %{py_sitedir}/%{name}/locale/da
