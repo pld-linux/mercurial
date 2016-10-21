@@ -15,7 +15,7 @@ Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony system kontroli wersji
 Name:		mercurial
 Version:	3.7.3
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Development/Version Control
 Source0:	https://www.mercurial-scm.org/release/%{name}-%{version}.tar.gz
@@ -87,7 +87,7 @@ Summary:	Scripts for serving Mercurial repositories over HTTP
 Summary(pl.UTF-8):	Skrypty do serwowania repozytoriów Mercuriala przez HTTP
 Group:		Development/Version Control
 Requires:	%{name} = %{version}-%{release}
-Requires:	apache-mod_wsgi >= 1.1
+Requires:	apache(mod_wsgi) >= 1.1
 Requires:	webapps
 
 %description hgweb
