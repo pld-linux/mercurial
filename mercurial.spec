@@ -128,7 +128,7 @@ hgk=
 %{__rm} tests/test-clonebundles.t
 
 # flaky tests
-%{__rm} tests/{test-convert-cvs-synthetic.t,test-convert-cvs,test-convert-cvs-detectmerge.t,test-convert-cvsnt-mergepoints.t,test-convert-cvs-branch.t,test-parse-date.t,test-gpg.t}
+%{__rm} tests/{test-convert-cvs-synthetic,test-convert-cvs,test-convert-cvs-detectmerge,test-convert-cvsnt-mergepoints,test-convert-cvs-branch,test-parse-date,test-gpg}.t
 
 %build
 %py_build
