@@ -14,16 +14,16 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony system kontroli wersji
 Name:		mercurial
-Version:	3.7.3
-Release:	2
+Version:	4.7
+Release:	1
 License:	GPL v2+
 Group:		Development/Version Control
 Source0:	https://www.mercurial-scm.org/release/%{name}-%{version}.tar.gz
-# Source0-md5:	f47c9c76b7bf429dafecb71fa81c01b4
-Source1:	gtools.py
+# Source0-md5:	a7ba37fb38308218fdb1f7ad37caa305
+
 Source2:	%{name}-%{webapp}.config
 Source3:	%{name}-%{webapp}-httpd.config
-Patch0:		%{name}-doc.patch
+
 Patch1:		%{name}-clean-environment.patch
 URL:		https://www.mercurial-scm.org/
 BuildRequires:	gettext-tools
@@ -121,22 +121,14 @@ hgk=
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p0
-cp -p %{SOURCE1} hgext/gtools.py
 
-# remove flaky tests failing due to glib deprecation warnings
-%{__rm} tests/{test-help.t,test-extension.t,test-alias.t,test-status-color.t,test-i18n.t,test-qrecord.t,test-strict.t,test-duplicateoptions.py}
+%patch1 -p0
 
 # fails on builders due to lack of networking
 %{__rm} tests/test-clonebundles.t
 
 # flaky tests
-%{__rm} tests/{test-template-engine.t,test-convert-cvs-synthetic.t,test-parse-date.t}
-
-%ifarch x32
-%{__rm} tests/test-context.py
-%endif
+%{__rm} tests/{test-convert-cvs-synthetic.t,test-convert-cvs,test-convert-cvs-detectmerge.t,test-convert-cvsnt-mergepoints.t,test-convert-cvs-branch.t,test-parse-date.t,test-gpg.t}
 
 %build
 %py_build
@@ -186,23 +178,39 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CONTRIBUTORS README
+%doc CONTRIBUTORS README.rst
 %attr(755,root,root) %{_bindir}/hg
 %{_mandir}/man1/*.1*
 %{_mandir}/man5/*.5*
 
 %files -n python-%{name}
 %defattr(644,root,root,755)
+%{py_sitedir}/hgdemandimport
 %{py_sitedir}/hgext
+%{py_sitedir}/hgext3rd
 %dir %{py_sitedir}/%{name}
 %attr(755,root,root) %{py_sitedir}/%{name}/*.so
 %{py_sitedir}/%{name}/*.py[co]
+%dir %{py_sitedir}/%{name}/cext
+%{py_sitedir}/%{name}/cext/*.py[co]
+%attr(755,root,root) %{py_sitedir}/%{name}/cext/*.so
+%{py_sitedir}/%{name}/cffi
 %{py_sitedir}/%{name}/default.d
 %{py_sitedir}/%{name}/help
 %{py_sitedir}/%{name}/hgweb
-%{py_sitedir}/%{name}/httpclient
 %{py_sitedir}/%{name}/pure
 %{py_sitedir}/%{name}/templates
+%dir %{py_sitedir}/%{name}/thirdparty
+%{py_sitedir}/%{name}/thirdparty/*.py[co]
+%{py_sitedir}/%{name}/thirdparty/attr
+%{py_sitedir}/%{name}/thirdparty/cbor
+%{py_sitedir}/%{name}/thirdparty/concurrent
+%dir %{py_sitedir}/%{name}/thirdparty/zope
+%{py_sitedir}/%{name}/thirdparty/zope/*.py[co]
+%dir %{py_sitedir}/%{name}/thirdparty/zope/interface
+%{py_sitedir}/%{name}/thirdparty/zope/interface/*.py[co]
+%attr(755,root,root) %{py_sitedir}/%{name}/thirdparty/zope/interface/*.so
+%{py_sitedir}/%{name}/utils
 %dir %{py_sitedir}/%{name}/locale
 %lang(da) %{py_sitedir}/%{name}/locale/da
 %lang(de) %{py_sitedir}/%{name}/locale/de
