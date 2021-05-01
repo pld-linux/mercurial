@@ -1,15 +1,11 @@
---- tests/run-tests.py~	2013-05-15 00:43:40.000000000 +0100
-+++ tests/run-tests.py	2013-06-02 19:51:26.913166446 +0100
-@@ -1186,6 +1186,12 @@
-     DAEMON_PIDS = os.environ["DAEMON_PIDS"] = os.path.join(HGTMP, 'daemon.pids')
-     HGRCPATH = os.environ["HGRCPATH"] = os.path.join(HGTMP, '.hgrc')
+--- mercurial-4.7/tests/run-tests.py.orig	2021-05-01 12:05:44.155689095 +0200
++++ mercurial-4.7/tests/run-tests.py	2021-05-01 12:08:54.234281616 +0200
+@@ -1095,7 +1095,7 @@
  
-+    try:
-+       del os.environ['GIT_DIR']
-+       del os.environ['GIT_WORK_TREE']
-+    except KeyError:
-+       pass
-+
-     try:
-         if INST:
-             installhg(options)
+         for k in ('HG HGPROF CDPATH GREP_OPTIONS http_proxy no_proxy ' +
+                   'HGPLAIN HGPLAINEXCEPT EDITOR VISUAL PAGER ' +
+-                  'NO_PROXY CHGDEBUG').split():
++                  'NO_PROXY CHGDEBUG GIT_DIR GIT_WORK_TREE').split():
+             if k in env:
+                 del env[k]
+ 

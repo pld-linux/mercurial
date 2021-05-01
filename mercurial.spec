@@ -122,7 +122,7 @@ hgk=
 %prep
 %setup -q
 
-%patch1 -p0
+%patch1 -p1
 
 # fails on builders due to lack of networking
 %{__rm} tests/test-clonebundles.t
