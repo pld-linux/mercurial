@@ -130,6 +130,9 @@ hgk=
 # flaky tests
 %{__rm} tests/{test-convert-cvs-synthetic,test-convert-cvs,test-convert-cvs-detectmerge,test-convert-cvsnt-mergepoints,test-convert-cvs-branch,test-parse-date,test-gpg}.t
 
+%{__sed} -i -e '1s|#!/usr/bin/env python$|#!%{__python3}|'  hgweb.cgi
+%{__sed} -i -e '1s|#!/usr/bin/env wish$|#!/usr/bin/wish|'  contrib/hgk
+
 %build
 %py_build
 %{__make} -C doc
