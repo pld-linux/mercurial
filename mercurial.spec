@@ -16,7 +16,7 @@ Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony system kontroli wersji
 Name:		mercurial
 Version:	6.5.1
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Development/Version Control
 Source0:	https://www.mercurial-scm.org/release/%{name}-%{version}.tar.gz
@@ -35,7 +35,7 @@ BuildRequires:	python3-pygobject3-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 %{?with_tests:BuildRequires:	unzip}
-Requires:	python-%{name} = %{version}-%{release}
+Requires:	python3-%{name} = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -75,7 +75,7 @@ Summary:	Mercurial Distributed SCM - Python libraries
 Summary(pl.UTF-8):	Rozproszony system kontroli wersji Mercurial - biblioteki Pythona
 Group:		Libraries/Python
 Requires:	python3-modules >= 1:3.6
-Obsoletes:	python-modules < 6.5.1
+Obsoletes:	python-mercurial < 6.5.1
 Conflicts:	mercurial < 3.5.2-2
 
 %description -n python3-%{name}
