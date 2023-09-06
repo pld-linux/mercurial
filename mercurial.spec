@@ -3,9 +3,10 @@
 #   builders) as fixed port 20059 is used.
 # - Warning: tests will fail inside vserver as binding to localhost, peername
 #   is not 127.0.0.1 (will be ip of interfaces/0/ip instead)
+# - Tests fail with python3 (state as of 6.5.1)
 #
 # Conditional build:
-%bcond_without	tests	# don't run tests
+%bcond_with	tests	# don't run tests
 
 %define         webapp          hgweb
 %define         webappdir       %{_sysconfdir}/webapps/%{webapp}
@@ -14,12 +15,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony system kontroli wersji
 Name:		mercurial
-Version:	4.7
+Version:	6.5.1
 Release:	1
 License:	GPL v2+
 Group:		Development/Version Control
 Source0:	https://www.mercurial-scm.org/release/%{name}-%{version}.tar.gz
-# Source0-md5:	a7ba37fb38308218fdb1f7ad37caa305
+# Source0-md5:	fccff6981f362466b8e9e0fa0de0ddb6
 
 Source2:	%{name}-%{webapp}.config
 Source3:	%{name}-%{webapp}-httpd.config
@@ -27,10 +28,10 @@ Source3:	%{name}-%{webapp}-httpd.config
 Patch1:		%{name}-clean-environment.patch
 URL:		https://www.mercurial-scm.org/
 BuildRequires:	gettext-tools
-BuildRequires:	python >= 1:2.6
-BuildRequires:	python-devel >= 1:2.6
-BuildRequires:	python-docutils
-BuildRequires:	python-pygtk-gtk >= 2:2.0
+BuildRequires:	python3 >= 1:3.6
+BuildRequires:	python3-devel >= 1:3.6
+BuildRequires:	python3-docutils
+BuildRequires:	python3-pygobject3-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 %{?with_tests:BuildRequires:	unzip}
@@ -69,18 +70,19 @@ projektów. Możliwości obejmują:
 - mały kod podstawowy w Pythonie
 - licencja GPL
 
-%package -n python-%{name}
+%package -n python3-%{name}
 Summary:	Mercurial Distributed SCM - Python libraries
 Summary(pl.UTF-8):	Rozproszony system kontroli wersji Mercurial - biblioteki Pythona
 Group:		Libraries/Python
-Requires:	python-modules >= 1:2.6
+Requires:	python3-modules >= 1:3.6
+Obsoletes:	python-modules < 6.5.1
 Conflicts:	mercurial < 3.5.2-2
 
-%description -n python-%{name}
-Mercurial Distributed SCM - Python libraries.
+%description -n python3-%{name}
+Mercurial Distributed SCM - Python 3 libraries.
 
-%description -n python-%{name} -l pl.UTF-8
-Rozproszony system kontroli wersji Mercurial - biblioteki Pythona.
+%description -n python3-%{name} -l pl.UTF-8
+Rozproszony system kontroli wersji Mercurial - biblioteki Pythona 3.
 
 %package hgweb
 Summary:	Scripts for serving Mercurial repositories over HTTP
@@ -101,7 +103,7 @@ Summary:	GUI for mercurial
 Summary(pl.UTF-8):	Graficzny interfejs użytkownika dla systemu Mercurial
 Group:		Development/Version Control
 Requires:	%{name} = %{version}-%{release}
-Requires:	python-modules
+Requires:	python3-modules
 
 %description hgk
 A tool called that allows browsing the history of a repository in a
@@ -119,6 +121,32 @@ Aby je uaktywnić, należy dodać do pliku .hgrc:
 [extensions]
 hgk=
 
+%package -n bash-completion-%{name}
+Summary:	Bash completion for Mercurial
+Summary(pl.UTF-8):	Bashowe dopełnianie parametrów Mercuriala
+Group:		Applications/Shells
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	bash-completion >= 2.0
+
+%description -n bash-completion-%{name}
+Bash completion for Mercurial.
+
+%description -n bash-completion-%{name} -l pl.UTF-8
+Bashowe dopełnianie parametrów Mercuriala.
+
+%package -n zsh-completion-%{name}
+Summary:▸       Zsh completion for Mercurial
+Summary(pl.UTF-8):▸     Dopełnianie parametrów w zsh dla Mercuriala
+Group:▸ ▸       Applications/Shells
+Requires:▸      %{name} = %{epoch}:%{version}-%{release}
+Requires:▸      zsh
+
+%description -n zsh-completion-%{name}
+Zsh completion for Mercurial.
+
+%description -n zsh-completion-%{name} -l pl.UTF-8
+Dopełnianie parametrów w zsh dla Mercuriala.
+
 %prep
 %setup -q
 
@@ -130,23 +158,23 @@ hgk=
 # flaky tests
 %{__rm} tests/{test-convert-cvs-synthetic,test-convert-cvs,test-convert-cvs-detectmerge,test-convert-cvsnt-mergepoints,test-convert-cvs-branch,test-parse-date,test-gpg}.t
 
-%{__sed} -i -e '1s|#!/usr/bin/env python$|#!%{__python3}|'  hgweb.cgi
-%{__sed} -i -e '1s|#!/usr/bin/env wish$|#!/usr/bin/wish|'  contrib/hgk
+%{__sed} -i -e '1s|#!/usr/bin/env python3$|#!%{__python3}|' hgweb.cgi
+%{__sed} -i -e '1s|#!/usr/bin/env wish$|#!/usr/bin/wish|' contrib/hgk
 
 %build
-%py_build
+%py3_build
 %{__make} -C doc
 
 %if %{with tests}
 cd tests
-%{__python} run-tests.py %{?_smp_mflags} --verbose
+%{__python3} run-tests.py %{?_smp_mflags} --verbose
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%py_install
+%py3_install
 
-%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/mercurial/dummycert.pem
+%{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/mercurial/dummycert.pem
 
 install -d $RPM_BUILD_ROOT{%{cgibindir},%{webappdir}}
 install -p *.cgi $RPM_BUILD_ROOT%{cgibindir}
@@ -160,9 +188,7 @@ install -d $RPM_BUILD_ROOT%{_mandir}/man{1,5}
 cp -p doc/*.1 $RPM_BUILD_ROOT%{_mandir}/man1
 cp -p doc/*.5 $RPM_BUILD_ROOT%{_mandir}/man5
 
-%py_comp $RPM_BUILD_ROOT%{py_sitedir}
-%py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
-%py_postclean
+#py_comp $RPM_BUILD_ROOT%{py3_sitedir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -186,48 +212,58 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*.1*
 %{_mandir}/man5/*.5*
 
-%files -n python-%{name}
+%files -n python3-%{name}
 %defattr(644,root,root,755)
-%{py_sitedir}/hgdemandimport
-%{py_sitedir}/hgext
-%{py_sitedir}/hgext3rd
-%dir %{py_sitedir}/%{name}
-%attr(755,root,root) %{py_sitedir}/%{name}/*.so
-%{py_sitedir}/%{name}/*.py[co]
-%dir %{py_sitedir}/%{name}/cext
-%{py_sitedir}/%{name}/cext/*.py[co]
-%attr(755,root,root) %{py_sitedir}/%{name}/cext/*.so
-%{py_sitedir}/%{name}/cffi
-%{py_sitedir}/%{name}/default.d
-%{py_sitedir}/%{name}/help
-%{py_sitedir}/%{name}/hgweb
-%{py_sitedir}/%{name}/pure
-%{py_sitedir}/%{name}/templates
-%dir %{py_sitedir}/%{name}/thirdparty
-%{py_sitedir}/%{name}/thirdparty/*.py[co]
-%{py_sitedir}/%{name}/thirdparty/attr
-%{py_sitedir}/%{name}/thirdparty/cbor
-%{py_sitedir}/%{name}/thirdparty/concurrent
-%dir %{py_sitedir}/%{name}/thirdparty/zope
-%{py_sitedir}/%{name}/thirdparty/zope/*.py[co]
-%dir %{py_sitedir}/%{name}/thirdparty/zope/interface
-%{py_sitedir}/%{name}/thirdparty/zope/interface/*.py[co]
-%attr(755,root,root) %{py_sitedir}/%{name}/thirdparty/zope/interface/*.so
-%{py_sitedir}/%{name}/utils
-%dir %{py_sitedir}/%{name}/locale
-%lang(da) %{py_sitedir}/%{name}/locale/da
-%lang(de) %{py_sitedir}/%{name}/locale/de
-%lang(el) %{py_sitedir}/%{name}/locale/el
-%lang(fr) %{py_sitedir}/%{name}/locale/fr
-%lang(it) %{py_sitedir}/%{name}/locale/it
-%lang(ja) %{py_sitedir}/%{name}/locale/ja
-%lang(pt_BR) %{py_sitedir}/%{name}/locale/pt_BR
-%lang(ro) %{py_sitedir}/%{name}/locale/ro
-%lang(ru) %{py_sitedir}/%{name}/locale/ru
-%lang(sv) %{py_sitedir}/%{name}/locale/sv
-%lang(zh_CN) %{py_sitedir}/%{name}/locale/zh_CN
-%lang(zh_TW) %{py_sitedir}/%{name}/locale/zh_TW
-%{py_sitedir}/mercurial-%{version}-py*.egg-info
+%{py3_sitedir}/hgdemandimport
+%{py3_sitedir}/hgext
+%{py3_sitedir}/hgext3rd
+%dir %{py3_sitedir}/%{name}
+%{py3_sitedir}/%{name}/__pycache__
+%attr(755,root,root) %{py3_sitedir}/%{name}/*.so
+%{py3_sitedir}/%{name}/*.py
+%dir %{py3_sitedir}/%{name}/cext
+%{py3_sitedir}/%{name}/cext/__pycache__
+%{py3_sitedir}/%{name}/cext/*.py
+%attr(755,root,root) %{py3_sitedir}/%{name}/cext/*.so
+%{py3_sitedir}/%{name}/cffi
+%{py3_sitedir}/%{name}/defaultrc
+%{py3_sitedir}/%{name}/dirstateutils
+%{py3_sitedir}/%{name}/helptext
+%{py3_sitedir}/%{name}/hgweb
+%{py3_sitedir}/%{name}/interfaces
+%{py3_sitedir}/%{name}/pure
+%{py3_sitedir}/%{name}/revlogutils
+%{py3_sitedir}/%{name}/stabletailgraph
+%{py3_sitedir}/%{name}/templates
+%{py3_sitedir}/%{name}/testing
+%dir %{py3_sitedir}/%{name}/thirdparty
+%{py3_sitedir}/%{name}/thirdparty/__pycache__
+%{py3_sitedir}/%{name}/thirdparty/*.py
+%{py3_sitedir}/%{name}/thirdparty/attr
+%attr(755,root,root) %{py3_sitedir}/%{name}/thirdparty/*.so
+%dir %{py3_sitedir}/%{name}/thirdparty/zope
+%{py3_sitedir}/%{name}/thirdparty/zope/__pycache__
+%{py3_sitedir}/%{name}/thirdparty/zope/*.py
+%dir %{py3_sitedir}/%{name}/thirdparty/zope/interface
+%{py3_sitedir}/%{name}/thirdparty/zope/interface/__pycache__
+%{py3_sitedir}/%{name}/thirdparty/zope/interface/*.py
+%attr(755,root,root) %{py3_sitedir}/%{name}/thirdparty/zope/interface/*.so
+%{py3_sitedir}/%{name}/upgrade_utils
+%{py3_sitedir}/%{name}/utils
+%dir %{py3_sitedir}/%{name}/locale
+%lang(da) %{py3_sitedir}/%{name}/locale/da
+%lang(de) %{py3_sitedir}/%{name}/locale/de
+%lang(el) %{py3_sitedir}/%{name}/locale/el
+%lang(fr) %{py3_sitedir}/%{name}/locale/fr
+%lang(it) %{py3_sitedir}/%{name}/locale/it
+%lang(ja) %{py3_sitedir}/%{name}/locale/ja
+%lang(pt_BR) %{py3_sitedir}/%{name}/locale/pt_BR
+%lang(ro) %{py3_sitedir}/%{name}/locale/ro
+%lang(ru) %{py3_sitedir}/%{name}/locale/ru
+%lang(sv) %{py3_sitedir}/%{name}/locale/sv
+%lang(zh_CN) %{py3_sitedir}/%{name}/locale/zh_CN
+%lang(zh_TW) %{py3_sitedir}/%{name}/locale/zh_TW
+%{py3_sitedir}/mercurial-%{version}-py*.egg-info
 
 %files hgweb
 %defattr(644,root,root,755)
@@ -240,3 +276,11 @@ rm -rf $RPM_BUILD_ROOT
 %files hgk
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/hgk
+
+%files -n bash-completion-%{name}
+%defattr(644,root,root,755)
+%{bash_compdir}/hg
+
+%files -n zsh-completion-mercurial
+%defattr(644,root,root,755)
+%{zsh_compdir}/_hg

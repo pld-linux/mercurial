@@ -1,11 +1,11 @@
 --- mercurial-4.7/tests/run-tests.py.orig	2021-05-01 12:05:44.155689095 +0200
 +++ mercurial-4.7/tests/run-tests.py	2021-05-01 12:08:54.234281616 +0200
-@@ -1095,7 +1095,7 @@
+@@ -1492,6 +1492,8 @@
+             'NO_PROXY',
+             'PAGER',
+             'VISUAL',
++            'GIT_DIR',
++            'GIT_WORK_TREE',
+         ]
  
-         for k in ('HG HGPROF CDPATH GREP_OPTIONS http_proxy no_proxy ' +
-                   'HGPLAIN HGPLAINEXCEPT EDITOR VISUAL PAGER ' +
--                  'NO_PROXY CHGDEBUG').split():
-+                  'NO_PROXY CHGDEBUG GIT_DIR GIT_WORK_TREE').split():
-             if k in env:
-                 del env[k]
- 
+         for k in dropped:
