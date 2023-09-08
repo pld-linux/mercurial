@@ -16,7 +16,7 @@ Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony system kontroli wersji
 Name:		mercurial
 Version:	6.5.1
-Release:	2
+Release:	3
 License:	GPL v2+
 Group:		Development/Version Control
 Source0:	https://www.mercurial-scm.org/release/%{name}-%{version}.tar.gz
@@ -135,11 +135,11 @@ Bash completion for Mercurial.
 Bashowe dopełnianie parametrów Mercuriala.
 
 %package -n zsh-completion-%{name}
-Summary:▸       Zsh completion for Mercurial
-Summary(pl.UTF-8):▸     Dopełnianie parametrów w zsh dla Mercuriala
-Group:▸ ▸       Applications/Shells
-Requires:▸      %{name} = %{epoch}:%{version}-%{release}
-Requires:▸      zsh
+Summary:	Zsh completion for Mercurial
+Summary(pl.UTF-8):	Dopełnianie parametrów w zsh dla Mercuriala
+Group:		Applications/Shells
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	zsh
 
 %description -n zsh-completion-%{name}
 Zsh completion for Mercurial.
