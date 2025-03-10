@@ -16,7 +16,7 @@ Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony system kontroli wersji
 Name:		mercurial
 Version:	6.5.1
-Release:	3
+Release:	4
 License:	GPL v2+
 Group:		Development/Version Control
 Source0:	https://www.mercurial-scm.org/release/%{name}-%{version}.tar.gz
@@ -150,7 +150,7 @@ Dopełnianie parametrów w zsh dla Mercuriala.
 %prep
 %setup -q
 
-%patch1 -p1
+%patch -P 1 -p1
 
 # fails on builders due to lack of networking
 %{__rm} tests/test-clonebundles.t
