@@ -15,12 +15,12 @@
 Summary:	Mercurial Distributed SCM
 Summary(pl.UTF-8):	Mercurial - rozproszony system kontroli wersji
 Name:		mercurial
-Version:	6.5.1
-Release:	5
+Version:	6.9.4
+Release:	1
 License:	GPL v2+
 Group:		Development/Version Control
 Source0:	https://www.mercurial-scm.org/release/%{name}-%{version}.tar.gz
-# Source0-md5:	fccff6981f362466b8e9e0fa0de0ddb6
+# Source0-md5:	57cc5a04f2fb8a41e90526bd18a90cc5
 
 Source2:	%{name}-%{webapp}.config
 Source3:	%{name}-%{webapp}-httpd.config
@@ -221,11 +221,14 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/%{name}/__pycache__
 %attr(755,root,root) %{py3_sitedir}/%{name}/*.so
 %{py3_sitedir}/%{name}/*.py
+%{py3_sitedir}/%{name}/admin
+%{py3_sitedir}/%{name}/branching
 %dir %{py3_sitedir}/%{name}/cext
 %{py3_sitedir}/%{name}/cext/__pycache__
 %{py3_sitedir}/%{name}/cext/*.py
 %attr(755,root,root) %{py3_sitedir}/%{name}/cext/*.so
 %{py3_sitedir}/%{name}/cffi
+%{py3_sitedir}/%{name}/configitems.toml
 %{py3_sitedir}/%{name}/defaultrc
 %{py3_sitedir}/%{name}/dirstateutils
 %{py3_sitedir}/%{name}/helptext
@@ -239,8 +242,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{py3_sitedir}/%{name}/thirdparty
 %{py3_sitedir}/%{name}/thirdparty/__pycache__
 %{py3_sitedir}/%{name}/thirdparty/*.py
-%{py3_sitedir}/%{name}/thirdparty/attr
 %attr(755,root,root) %{py3_sitedir}/%{name}/thirdparty/*.so
+%{py3_sitedir}/%{name}/thirdparty/attr
+%{py3_sitedir}/%{name}/thirdparty/tomli
 %dir %{py3_sitedir}/%{name}/thirdparty/zope
 %{py3_sitedir}/%{name}/thirdparty/zope/__pycache__
 %{py3_sitedir}/%{name}/thirdparty/zope/*.py
